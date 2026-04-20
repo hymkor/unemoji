@@ -41,7 +41,7 @@ func parseArgf(args []string, routine func(io.Reader, string) error) error {
 }
 
 func runArgf(args []string, routine func(io.Reader, string) error) {
-	if err := parseArgf(os.Args[1:], routine); err != nil {
+	if err := parseArgf(args, routine); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
