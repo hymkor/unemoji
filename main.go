@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"io"
 	"os"
@@ -13,17 +12,16 @@ var rxEmoji = regexp.MustCompile(
 	"[\u2600-\u27BF\U0001F300-\U0001F9FF\U0001F1E6-\U0001F1FF]")
 
 func unemoji(r io.Reader, name string) error {
-	sc := bufio.NewScanner(r)
-	for sc.Scan() {
-		fmt.Println(
+	return eachLine(r, func(line string) error {
+		_, err := io.WriteString(os.Stdout,
 			rxEmoji.ReplaceAllStringFunc(
-				sc.Text(),
+				line,
 				func(s string) string {
 					u, _ := utf8.DecodeRuneInString(s)
 					return fmt.Sprintf("&#x%x;", u)
 				}))
-	}
-	return nil
+		return err
+	})
 }
 
 func main() {
